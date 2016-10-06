@@ -1,37 +1,48 @@
 __author__ = 'Mira'
 from random import randint
 
-n = int(input("How many times we should play?\n"))
-
 def dice():
     return randint(1,6)
 
-def game(times):
-    player1 = 0
-    player2 = 0
-    for i in xrange(n):
-        result1 = dice() + dice()
-        result2 = dice() + dice()
-        print("Player1 gets %d, and player2 gets %d.\n".format(result1,
-            result2))
+class Player:
+    def __init__(self):
+        self._result = 0
 
-        if result1 < result2:
-            player2 += 1
-        else:
-            player1 += 1
-        
-        print("%s:%s\n" % (player1, player2))
+    def roll(self):
+        return dice() + dice()
+
+    @property
+    def result(self):
+        return self._result
+
+    def wins(self):
+        self._result += 1
+
+    def __eq__(self, other):
+        return self.result == other.result
+
+def play(player1, player2):
+    result1 = player1.roll()
+    result2 = player2.roll()
+    print("Round: Player 1 {0} : {1} Player 2".format(result1, result2))
+    if result1 > result2:
+        player1.wins()
+    if result2 > result1:
+        player2.wins()
+    print("{0} : {1}".format(player1.result, player2.result))
+
+def game(times):
+    player1 = Player()
+    player2 = Player()
+    for i in range(n):
+       play(player1, player2) 
     
     if player1 == player2:
         while player1 == player2:
-            result1 = dice() + dice()
-            result2 = dice() + dice()
-            print("zawodnik1 wylosowal " + str(result1) + " oczek, a zawodnik2 wylosowal " + str(result2) + "oczek\n")
-            if result1 < result2:
-                player2 += 1
-            else:
-                player1 += 1
-            print('%s:%s\n' % (player1, player2))
+           play(player1, player2) 
     
-    print("Player %d wins!\n" % (1 if player1 > player2 else 2))
+    print("Player %s wins!\n" % (
+        "1" if player1.result > player2.result else "2"))
 
+n = int(input("How many times we should play?\n"))
+game(n)
