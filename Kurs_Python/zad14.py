@@ -1,21 +1,18 @@
-__author__ = 'Mira'
+def count_for_value(n, mods):
+    times = 0
+    while n % mods == 0:
+        times += 1
+        n /= mods
+    return times, n
+
 def rozklad(n):
-    if n<=1:
-        return n
-    czynnik = 2
-    temp=[]
-    zliczacz = 0
-    while czynnik <= n:
-        if n%czynnik == 0:
-            zliczacz+=1
-            n/=czynnik
-        else:
-            if zliczacz!=0:
-                temp.append((czynnik,zliczacz))
-                zliczacz = 0
-            czynnik+=1
-    temp.append((czynnik,zliczacz))
-    print(temp)
-    return temp
-liczba = int(input("Podaj liczbe: "))
-rozklad(liczba)
+    list_of_parts = []
+    parts = 2
+    if n <= 1:
+        return list_of_primes
+    while parts <= n:
+        times, n = count_for_value(n, parts)
+        if times:
+            list_of_parts.append((parts, times))
+        parts += 1
+    return list_of_parts
