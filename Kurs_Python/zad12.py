@@ -10,9 +10,14 @@ class XOREncryption:
     @key.setter
     def key(self, value):
         self._key = value
+        self.encrypted_key = format(self.key, 'b')
 
     def to_ascii(self, char):
         return format(ord(char), 'b')
 
-    def from_ascii(self, asci):
-        return int(str(asci), 2)
+    def xor(self, char):
+        return chr(int(self.to_ascii(char), 2) ^ int(self.encrypted_key, 2))
+
+    def encrypt(self, string):
+        encrypt = map(lambda x: self.xor(x), string)
+        return ''.join(i for i in list(encrypt))
