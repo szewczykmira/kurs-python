@@ -1,5 +1,6 @@
 __author__ = 'Mira'
 from math import sqrt
+
 def is_prime(n):
     iter = 2
     while iter <= sqrt(n):
@@ -11,5 +12,6 @@ def is_prime(n):
 
 def prime_functional(n):
     return list(filter(is_prime, range(2, n+1)))
+
 def prime_comprehensions(n):
     return [x for x in range(2, n+1) if is_prime(x)==True]
