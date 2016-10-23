@@ -1,44 +1,54 @@
 __author__ = 'Mira'
 from io import StringIO
+from collections import Counter
 
 class Worder(object):
+
     def __init__(self, stream):
         self.stream = stream
         self.firstchar = ''
+    
     def __iter__(self):
         return self
+    
     def __next__(self):
         word = self.firstchar
         term = False
         split = False
         while True:
             char = self.stream.read(1)
+    
             if char == '':
                 if word == '':
                     raise StopIteration
                 self.firstchar = ''
                 break
+            
             if char.isalnum():
                 if term:
                     self.firstchar = char
                     break
                 word += char
+            
             else:
                 if char == '-':
                     split = True
                 elif not(char == '\n' and split):
                     term = True
                     self.firstchar = ''
+        
         return word
 
-from collections import Counter
 
 def stats(string):
     stats = Counter()
     stream = StringIO(string)
+    
     for word in Worder(stream):
         stats[len(word)] += 1
+    
     stream.close()
+    
     return stats
 
 string = """Zaprogramuj iterator który przetwarza strumień tekstowy i zwraca
