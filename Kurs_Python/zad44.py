@@ -1,4 +1,4 @@
-__author__ = 'Mira'
+import string
 from io import StringIO
 from collections import Counter
 
@@ -6,55 +6,39 @@ class Worder(object):
 
     def __init__(self, stream):
         self.stream = stream
-        self.firstchar = ''
+        self.iter = 0
     
     def __iter__(self):
         return self
     
     def __next__(self):
-        word = self.firstchar
-        term = False
-        split = False
+        acc = ['\n','-']
+        word = ''
+        helper = self.iter
+        if helper == len(self.stream):
+            raise StopIteration
         while True:
-            char = self.stream.read(1)
-    
-            if char == '':
-                if word == '':
-                    raise StopIteration
-                self.firstchar = ''
-                break
-            
-            if char.isalnum():
-                if term:
-                    self.firstchar = char
-                    break
-                word += char
-            
+            if self.stream[helper].isalnum() or self.stream[helper] in acc:
+                if not self.stream[helper] in acc:
+                    word += self.stream[helper]
+                helper += 1
             else:
-                if char == '-':
-                    split = True
-                elif not(char == '\n' and split):
-                    term = True
-                    self.firstchar = ''
-        
+                helper += 1
+                break
+        self.iter = helper
         return word
 
-
-def stats(string):
+def stats(text):
     stats = Counter()
-    stream = StringIO(string)
-    
-    for word in Worder(stream):
+    for word in Worder(text):
         stats[len(word)] += 1
-    
-    stream.close()
     
     return stats
 
-string = """Zaprogramuj iterator który przetwarza strumień tekstowy i zwraca
+text = """Zaprogramuj iterator który przetwarza strumień tekstowy i zwraca
 kolejne słowa z tekstu (dla utrudnienia uwzględnij dzielenie słów na końcach wier-
 szy), pomijając białe znaki i znaki interpunkcyjne. Korzystając z tej implementacji
 zaprogramuj obliczanie statystyki długości słów w tekście, tj. ile jest słów długości 1,
 ile długości 2 etc."""
 
-print(stats(string))
+print(stats(text))
